@@ -116,8 +116,8 @@
 
             discord: {
                 toLogin: function() {
-                    window.open('https://discordapp.com/login?redirect_to=' +
-                        encodeURIComponent('/oauth2/authorize?client_id=436178201329401857&scope=identify&redirect_uri=' + window.location.origin + window.location.pathname + '&response_type=token&state=' + encodeURIComponent(window.location.hash.substring(1))));
+                    window.location.href = 'https://discordapp.com/login?redirect_to=' +
+                        encodeURIComponent('/oauth2/authorize?client_id=436178201329401857&scope=identify&redirect_uri=' + window.location.origin + window.location.pathname + '&response_type=token&state=' + encodeURIComponent(window.location.hash.substring(1)));
                 }
             }
         };
