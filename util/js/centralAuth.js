@@ -118,6 +118,29 @@
                 toLogin: function() {
                     window.location.href = 'https://discordapp.com/login?redirect_to=' +
                         encodeURIComponent('/oauth2/authorize?client_id=436178201329401857&scope=identify&redirect_uri=' + window.location.origin + window.location.pathname + '&response_type=token&state=' + encodeURIComponent(window.location.hash.substring(1)));
+                },
+
+                checkLogin: function() {
+                    return cors(nodeURL).done(function(info) {
+                        centralAuth.discord.info = info;
+                    });
+                },
+
+                doLogin: function(token) {
+                    return cors({
+                        url: nodeURL,
+                        method: 'POST',
+                        data: token,
+                        contentType: 'text/plain'
+                    }).done(function(info) {
+                        centralAuth.discord.info = info;
+                    });
+                },
+
+                doLogout: function() {
+                    return cors(nodeURL + '/logout').done(function() {
+                        delete centralAuth.discord.info;
+                    });
                 }
             }
         };
