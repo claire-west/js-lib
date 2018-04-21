@@ -128,10 +128,8 @@
 
                 doLogin: function(token) {
                     return cors({
-                        url: nodeURL + '/serpens/login',
-                        method: 'POST',
-                        data: token,
-                        contentType: 'text'
+                        url: nodeURL + '/serpens/login/' + token,
+                        method: 'POST'
                     }).done(function(info) {
                         centralAuth.discord.info = info;
                     });
