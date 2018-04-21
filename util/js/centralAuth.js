@@ -131,7 +131,7 @@
                         url: nodeURL + '/serpens/login',
                         method: 'POST',
                         data: token,
-                        contentType: 'text/plain'
+                        contentType: 'text'
                     }).done(function(info) {
                         centralAuth.discord.info = info;
                     });
