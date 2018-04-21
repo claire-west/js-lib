@@ -136,7 +136,7 @@
                 },
 
                 doLogout: function() {
-                    return cors(nodeURL + '/logout').done(function() {
+                    return cors(nodeURL + '/serpens/logout').done(function() {
                         delete centralAuth.discord.info;
                     });
                 }
