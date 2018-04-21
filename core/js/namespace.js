@@ -28,6 +28,9 @@
                 root = tail.join('/') + (suffix ? '/' + suffix : '');
 
                 // Ensure leading slash, no trailing slash, remove double slashes
+                if (root.startsWith('//')) {
+                    root = root.substring(1);
+                }
                 return root;// '/' + root.split('/').filter(function(part) { return part; }).join('/');
             },
             file: function(path, folder, ext) {
