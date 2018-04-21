@@ -121,14 +121,14 @@
                 },
 
                 checkLogin: function() {
-                    return cors(nodeURL + 'serpens/login').done(function(info) {
+                    return cors(nodeURL + '/serpens/login').done(function(info) {
                         centralAuth.discord.info = info;
                     });
                 },
 
                 doLogin: function(token) {
                     return cors({
-                        url: nodeURL + 'serpens/login',
+                        url: nodeURL + '/serpens/login',
                         method: 'POST',
                         data: token,
                         contentType: 'text/plain'
