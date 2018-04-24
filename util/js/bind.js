@@ -280,7 +280,7 @@
                 var compared = false;
                 if (typeof(args.contains) !== 'undefined') {
                     compared = true;
-                    valid = valid && val.includes(args.contains);
+                    valid = valid && val && val.includes(args.contains);
                 }
                 if (typeof(args.eq) !== 'undefined') {
                     compared = true;
