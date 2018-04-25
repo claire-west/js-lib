@@ -115,6 +115,8 @@
             },
 
             discord: {
+                promise: $.Deferred(),
+
                 toLogin: function() {
                     window.location.href = 'https://discordapp.com/login?redirect_to=' +
                         encodeURIComponent('/oauth2/authorize?client_id=436178201329401857&scope=identify&redirect_uri=' + window.location.origin + window.location.pathname + '&response_type=token&state=' + encodeURIComponent(window.location.hash.substring(1)));
@@ -122,6 +124,7 @@
 
                 checkLogin: function() {
                     return cors(nodeURL + '/serpens/login').done(function(info) {
+                        centralAuth.discord.promise.resolve(info);
                         centralAuth.discord.info = info;
                     });
                 },
@@ -131,14 +134,20 @@
                         url: nodeURL + '/serpens/login/' + token,
                         method: 'POST'
                     }).done(function(info) {
+                        centralAuth.discord.promise.resolve(info);
                         centralAuth.discord.info = info;
                     });
                 },
 
                 doLogout: function() {
                     return cors(nodeURL + '/serpens/logout').done(function() {
+                        centralAuth.discord.promise = $.Deferred();
                         delete centralAuth.discord.info;
                     });
+                },
+
+                onLogin: function() {
+                    return centralAuth.discord.promise;
                 }
             }
         };
