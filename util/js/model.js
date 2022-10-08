@@ -13,8 +13,6 @@
                 return propGet.get(this, path);
             },
 
-            _trackers: [],
-
             _track: function(exp, handler) {
                 var fn = exp;
                 if (typeof(exp) === 'string') {
@@ -81,8 +79,6 @@
                 } while (dirty);
             },
 
-            _children: [],
-
             _fullRefresh: function(seen) {
                 seen = seen || [];
                 if (seen.includes(this)) {
@@ -105,7 +101,11 @@
 
         return function(data, parent) {
             var self = Object.create(model);
-            self._parent = parent;
+            Object.assign(self, {
+                _parent: parent,
+                _trackers: [],
+                _children: []
+            });
             if (parent) {
                 parent._children.push(self);
             }
