@@ -187,17 +187,15 @@
                     while (path[0] === '/') {
                         scope = scope.substring(1);
                         path = path.substring(1);
-                        if (model._parent) {
-                            model = model._parent;
-                        }
+                    }
+
+                    while (model._parent) {
+                        model = model._parent;
                     }
                 }
 
                 while (path[0] === '/' || path[0] === '.') {
                     scope += path[0];
-                    if (path[0] === '/' && model._parent) {
-                        model = model._parent;
-                    }
                     path = path.substring(1);
                 }
 
