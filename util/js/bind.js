@@ -23,7 +23,7 @@
                             }
 
                             for (var key in binding) {
-                                var path = self.parsePath(binding[key], model, scopes).path;
+                                var path = self.parsePath(binding[key], scopes).path;
                                 model._track(path, function(val, prev, i) {
                                     propGet.set(fragmentModel, key, val);
                                 });
@@ -141,14 +141,15 @@
                     }
 
                     for (var i = 0; i < binding.args.length; i++) {
-                        binding.args[i] = this.parsePath(binding.args[i], model, scopes).path;
+                        binding.args[i] = this.parsePath(binding.args[i], scopes).path;
                     }
                 }
 
-                return Object.assign(binding, this.parsePath(binding.path, model, scopes));
+                binding.model = model;
+                return Object.assign(binding, this.parsePath(binding.path, scopes));
             },
 
-            parsePath: function(path, model, scopes) {
+            parsePath: function(path, scopes) {
                 var scope = '';
                 if (path[0] === '>') {
                     path = path.substring(1);
@@ -188,10 +189,6 @@
                         scope = scope.substring(1);
                         path = path.substring(1);
                     }
-
-                    while (model._parent) {
-                        model = model._parent;
-                    }
                 }
 
                 while (path[0] === '/' || path[0] === '.') {
@@ -205,7 +202,6 @@
 
                 return {
                     path: path,
-                    model: model,
                     scope: scope
                 };
             },
@@ -411,7 +407,7 @@
                 $element.removeAttr('z--' + event);
 
                 args.args = args.args || [];
-                args.self = this.parsePath('>', model, scopes).path;
+                args.self = this.parsePath('>', scopes).path;
                 var element = $element.get(0);
                 $element.on(event, function(e) {
                     var fn = model._get(args.path);
