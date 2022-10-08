@@ -18,7 +18,7 @@
                     var path = tagName.substring(3) + '-' + ($element.attr('z--frag') || '');
                     path = path.split('-').filter(function(item) { return item; }).join('.');
                     $element.removeAttr('z--frag');
-                    
+
                     var $placeholder = $('<p/>', {
                         text: 'Loading... ', class: 'text-center'
                     }).append($('<i/>', { class: 'fa fa-refresh fa-spin' }));
@@ -34,7 +34,7 @@
                         });
 
                         self.getController(path, $fragment).done(function(fn) {
-                            if (fn) {
+                            if (fn && typeof(fn) === 'function') {
                                 var controller = fn($fragment, model);
                                 model = controller.model;
                             }
