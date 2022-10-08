@@ -141,15 +141,14 @@
                     }
 
                     for (var i = 0; i < binding.args.length; i++) {
-                        binding.args[i] = this.parsePath(binding.args[i], scopes).path;
+                        binding.args[i] = this.parsePath(binding.args[i], model, scopes).path;
                     }
                 }
 
-                binding.model = model;
-                return Object.assign(binding, this.parsePath(binding.path, scopes));
+                return Object.assign(binding, this.parsePath(binding.path, model, scopes));
             },
 
-            parsePath: function(path, scopes) {
+            parsePath: function(path, model, scopes) {
                 var scope = '';
                 if (path[0] === '>') {
                     path = path.substring(1);
@@ -188,11 +187,17 @@
                     while (path[0] === '/') {
                         scope = scope.substring(1);
                         path = path.substring(1);
+                        if (model._parent) {
+                            model = model._parent;
+                        }
                     }
                 }
 
                 while (path[0] === '/' || path[0] === '.') {
                     scope += path[0];
+                    if (path[0] === '/' && model._parent) {
+                        model = model._parent;
+                    }
                     path = path.substring(1);
                 }
 
@@ -202,6 +207,7 @@
 
                 return {
                     path: path,
+                    model: model,
                     scope: scope
                 };
             },
@@ -407,7 +413,7 @@
                 $element.removeAttr('z--' + event);
 
                 args.args = args.args || [];
-                args.self = this.parsePath('>', scopes).path;
+                args.self = this.parsePath('>', model, scopes).path;
                 var element = $element.get(0);
                 $element.on(event, function(e) {
                     var fn = model._get(args.path);
