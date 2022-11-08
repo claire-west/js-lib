@@ -293,8 +293,8 @@
                             });
 
                             var url = ns.js(title);
-                            if (preload[url]) {
-                                preload[url]();
+                            if (preload[title]) {
+                                preload[title]();
                                 pending.push($.when().done(function() {
                                     console.info('Module ' + url + ' initialized from preload.');
                                     loadedModules.push(url);

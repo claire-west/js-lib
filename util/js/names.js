@@ -1,5 +1,5 @@
 (function(dynCore) {
-    dynCore.declare('lib.names', 
+    dynCore.declare('lib.names',
         dynCore.json('lib.json.names'),
     function(modules, names) {
         var setList = {};
@@ -17,7 +17,7 @@
                 return setList;
             },
 
-            get(sets) {
+            get: function(sets) {
                 sets = sets || setList;
                 if (typeof(sets) === 'string') {
                     var category = sets;
