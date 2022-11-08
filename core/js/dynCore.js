@@ -7,6 +7,7 @@
     var ready = $.Deferred();
     var $this = $('script[src$="dynCore.js"]');
 
+    var preload = {};
     var loadedModules = [];
     var modules = {};
     var templates = {};
@@ -251,6 +252,9 @@
 
                     return promise;
                 },
+                register: function(files) {
+                    Object.assign(preload, files);
+                },
                 require: function(titles, prefix) {
                     if (titles && Array.isArray(prefix)) {
                         var temp = prefix;
@@ -275,6 +279,7 @@
                         if (prefix) {
                             titles[i] = prefix + '.' + titles[i];
                         }
+
                         if (!unresolved[titles[i]]) {
                             var title = titles[i];
                             unresolved[titles[i]] = $.Deferred().done(function() {
@@ -286,7 +291,17 @@
                                     console.log('ERROR LOADING: ' + title);
                                 }
                             });
-                            pending.push(this.js(titles[i]).fail(unresolved[titles[i]].reject));
+
+                            var url = ns.js(title);
+                            if (preload[url]) {
+                                preload[url]();
+                                pending.push($.when().done(function() {
+                                    console.info('Module ' + url + ' initialized from preload.');
+                                    loadedModules.push(url);
+                                }));
+                            } else {
+                                pending.push(this.js(titles[i]).fail(unresolved[titles[i]].reject));
+                            }
                             if (debug) {
                                 console.log('BEGIN LOADING: ' + titles[i]);
                             }
@@ -448,7 +463,23 @@
                 }
             });
 
-            ready.resolve(modules);
+            var preloads = [];
+            var preloadNamespaces = $this.data('preload');
+            if (typeof(preloadNamespaces) === 'undefined') {
+                ready.resolve(modules);
+            } else {
+                if (!Array.isArray(preloadNamespaces)) {
+                    preloadNamespaces = [];
+                    console.warn('dynCore-data-preload is not a valid JSON array.');
+                }
+                for (var i = 0; i < preloadNamespaces.length; i++) {
+                    console.log(ns.minjs(preloadNamespaces[i] + ".preload"))
+                    preloads.push(getScript(ns.minjs(preloadNamespaces[i] + ".preload")));
+                }
+                $.when.apply(this, preloads).always(() => {
+                    ready.resolve(modules);
+                });
+            }
         });
     });
 })();
