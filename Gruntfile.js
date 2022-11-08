@@ -1,7 +1,14 @@
 module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    clean: ['build', 'util/js/preload.min.js'],
+    clean: {
+      pre: {
+        src: ['build', 'util/js/preload.min.js']
+      },
+      post:  {
+        src: ['build']
+      }
+    },
     uglify: {
       files: {
         expand: true,
@@ -26,5 +33,5 @@ module.exports = function(grunt) {
   grunt.loadTasks('./grunt');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.registerTask('default', ['clean', 'uglify', 'build_preload']);
+  grunt.registerTask('default', ['clean:pre', 'uglify', 'build_preload', 'clean:post']);
 };
