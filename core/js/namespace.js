@@ -56,6 +56,9 @@
             js: function(path) {
                 return this.file(path, 'js');
             },
+            minjs: function(path) {
+                return this.file(path, 'js', '.min.js');
+            },
             json: function(path) {
                 return this.file(path, 'json');
             },
