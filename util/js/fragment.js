@@ -89,6 +89,18 @@
                     if (typeof(controllers[path]) === 'undefined') {
                         controllers[path] = $.Deferred();
                         dynCore.js(controller);
+                    } else {
+                        // controller already exists, return for model binding
+                        var promise = $.Deferred();
+                        controllers[path].done(function(frag) {
+                            promise.resolve(function() {
+                                if (frag.reinit && frag.onInit) {
+                                    frag.onInit();
+                                }
+                                return frag;
+                            });
+                        });
+                        return promise;
                     }
 
                     return controllers[path];
