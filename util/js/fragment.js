@@ -34,11 +34,11 @@
                         });
 
                         self.getController(path, $fragment).done(function(fn) {
+                            $placeholder.replaceWith($fragment);
                             if (fn && typeof(fn) === 'function') {
                                 var controller = fn($fragment, model);
                                 model = controller.model;
                             }
-                            $placeholder.replaceWith($fragment);
                             promise.resolve($fragment, model);
                         }).fail(function() {
                             promise.reject();
