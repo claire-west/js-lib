@@ -473,7 +473,6 @@
                     console.warn('dynCore-data-preload is not a valid JSON array.');
                 }
                 for (var i = 0; i < preloadNamespaces.length; i++) {
-                    console.log(ns.minjs(preloadNamespaces[i] + ".preload"))
                     preloads.push(getScript(ns.minjs(preloadNamespaces[i] + ".preload")));
                 }
                 $.when.apply(this, preloads).always(() => {

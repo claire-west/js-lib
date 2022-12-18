@@ -19,9 +19,10 @@
                     path = path.split('-').filter(function(item) { return item; }).join('.');
                     $element.removeAttr('z--frag');
 
-                    var $placeholder = $('<p/>', {
-                        text: 'Loading... ', class: 'text-center'
-                    }).append($('<i/>', { class: 'fa fa-refresh fa-spin' }));
+                    var $placeholder = $('<div/>');
+                    // var $placeholder = $('<p/>', {
+                    //     text: 'Loading... ', class: 'text-center'
+                    // }).append($('<i/>', { class: 'fa fa-refresh fa-spin' }));
                     $element.replaceWith($placeholder);
 
                     var self = this;
