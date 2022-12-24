@@ -4,8 +4,22 @@
         throw 'jQuery is undefined';
     }
 
+    if (typeof(window.dynCore) !== 'undefined') {
+        alert('Error: dynCore is already defined');
+        throw 'dynCore is already defined';
+    }
+
     var ready = $.Deferred();
     var $this = $('script[src$="dynCore.js"]');
+
+    var main = $this.data('main');
+    if (main) {
+        ready.done(() => {
+            dynCore.require(main);
+        });
+    } else {
+        console.warn('dynCore-data-main is not set.');
+    }
 
     var preload = {};
     var loadedModules = [];
