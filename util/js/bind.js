@@ -1,5 +1,6 @@
 (function(dynCore) {
     dynCore.declare('lib.bind', dynCore.require('lib', ['fragment', 'propGet', 'model']), function(modules, fragment, propGet) {
+        var fnAfterScan = [];
         var bind = {
             scan: function(element, model, scopes) {
                 var $element = $(element);
@@ -485,7 +486,11 @@
                     if (!loaded && self.checkModifiers.call($element, args, val)) {
                         loaded = true;
                         $element.append($children);
-                        self.scan($element, model, scopes).fail(function() {
+                        self.scan($element, model, scopes).done(function() {
+                            for (var i = 0; i < fnAfterScan.length; i++) {
+                                fnAfterScan[i].call(this, $element, model, scopes);
+                            }
+                        }).fail(function() {
                             $element.empty();
                             loaded = false;
                         });
@@ -495,7 +500,15 @@
         };
 
         return function($element, model) {
-            return bind.scan($element, model);
+            if (typeof($element) === 'function') {
+                fnAfterScan.push($element);
+                return;
+            }
+            return bind.scan($element, model).done(function() {
+                for (var i = 0; i < fnAfterScan.length; i++) {
+                    fnAfterScan[i].call(this, $element, model);
+                }
+            });
         };
     });
 })(window.dynCore);
