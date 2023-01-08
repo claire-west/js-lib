@@ -1,7 +1,7 @@
 (function(dynCore) {
     dynCore.declare('lib.arraySort');
 
-    Array.prototype.sortBy = function(properties) {
+    Array.prototype.sortBy = function(properties, descending) {
         var tempArray = properties.split("[").join(".").split("]").join(".").split(".");
         var propArray = [];
         for (var i = 0; i < tempArray.length; i++) {
@@ -23,6 +23,9 @@
             var bVal = getPropByPropArray(b, propArray);
             if (typeof aVal === "string" && typeof bVal === "string") {
                 return aVal.toLocaleLowerCase().localeCompare(bVal.toLocaleLowerCase());
+            }
+            if (descending) {
+                return aVal - bVal;
             }
             return bVal - aVal;
         });
