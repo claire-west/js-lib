@@ -29,5 +29,6 @@
             }
             return descending ? aVal - bVal : bVal - aVal;
         });
+        return this;
     };
 })(window.dynCore);
