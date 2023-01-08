@@ -22,12 +22,12 @@
             var aVal = getPropByPropArray(a, propArray);
             var bVal = getPropByPropArray(b, propArray);
             if (typeof aVal === "string" && typeof bVal === "string") {
+                if (descending) {
+                    bVal.toLocaleLowerCase().localeCompare(aVal.toLocaleLowerCase());
+                }
                 return aVal.toLocaleLowerCase().localeCompare(bVal.toLocaleLowerCase());
             }
-            if (descending) {
-                return aVal - bVal;
-            }
-            return bVal - aVal;
+            return descending ? aVal - bVal : bVal - aVal;
         });
     };
 })(window.dynCore);
