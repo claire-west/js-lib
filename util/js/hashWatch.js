@@ -6,7 +6,7 @@
             var args = window.location.hash.substr(1).split('/');
             for (var i = 0; i < handlers.length; i++) {
                 if (handlers[i].condition.call(this, args)) {
-                    handlers[page][i].apply(this, args);
+                    handlers[i].apply(this, args);
                 }
             }
         };
