@@ -11,13 +11,13 @@
         }
         var getPropByPropArray = function(object, propArray, index) {
             if (!index) {
-            index = 0;
+                index = 0;
             }
             if (index === propArray.length - 1) {
                 return object[propArray[index]];
             }
             return getPropByPropArray(object[propArray[index]], propArray, ++index);
-        }
+        };
         this.sort(function(a, b) {
             var aVal = getPropByPropArray(a, propArray);
             var bVal = getPropByPropArray(b, propArray);
