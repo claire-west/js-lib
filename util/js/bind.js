@@ -62,6 +62,9 @@
                 if ($element.attr('z--text')) {
                     this.bindText($element, model, scopes);
                 }
+                if ($element.attr('z--html')) {
+                    this.bindHtml($element, model, scopes);
+                }
                 if ($element.attr('z--title')) {
                     this.bindTitle($element, model, scopes);
                 }
@@ -242,6 +245,15 @@
                 }
             },
 
+            bindHtml: function($element, model, scopes) {
+                var args = Object.assign({
+                    $element: $element
+                }, this.getBinding($element.attr('z--html'), model, scopes));
+                $element.removeAttr('z--html');
+
+                this.html(args);
+            },
+
             bindTitle: function($element, model, scopes) {
                 var args = Object.assign({
                     $element: $element
@@ -365,6 +377,17 @@
                         text = '';
                     }
                     args.$element.text(text);
+                });
+            },
+
+            html: function(args) {
+                var self = this;
+                args.model._track(args.path, function(val, prev) {
+                    var html = self.checkModifiers.call(args.$element, args, val, prev);
+                    if (typeof(html) === 'undefined' || html === null) {
+                        html = '';
+                    }
+                    args.$element.html(html);
                 });
             },
 
