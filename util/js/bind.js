@@ -91,6 +91,9 @@
                 if ($element.attr('z--class')) {
                     this.class($element, model, scopes);
                 }
+                if ($element.attr('z--style')) {
+                    this.style($element, model, scopes);
+                }
 
                 if ($element.attr('z--lazy')) {
                     this.lazy($element, model, scopes);
@@ -493,6 +496,32 @@
                             $element.addClass(args.class)
                         } else {
                             $element.removeClass(args.class);
+                        }
+                    });
+                }
+            },
+
+            style: function($element, model, scopes) {
+                var self = this;
+                var zStyle = $element.attr('z--style');
+                try {
+                    zStyle = JSON.parse(zStyle);
+                } catch (e) {
+                    zStyle = {};
+                }
+
+                if (!Array.isArray(zStyle)) {
+                    zStyle = [ zStyle ];
+                }
+                $element.removeAttr('z--style');
+
+                for (let i = 0; i < zStyle.length; i++) {
+                    let args = this.getBinding(JSON.stringify(zStyle[i]), model, scopes);
+                    args.model._track(args.path, function(val, prev) {
+                        if (self.checkModifiers.call($element, args, val, prev)) {
+                            $element.css(args.style, val)
+                        } else {
+                            $element.css(args.style, '');
                         }
                     });
                 }
