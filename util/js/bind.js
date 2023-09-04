@@ -486,8 +486,8 @@
                 }
                 $element.removeAttr('z--class');
 
-                for (var i = 0; i < zClass.length; i++) {
-                    var args = this.getBinding(JSON.stringify(zClass[i]), model, scopes);
+                for (let i = 0; i < zClass.length; i++) {
+                    let args = this.getBinding(JSON.stringify(zClass[i]), model, scopes);
                     args.model._track(args.path, function(val, prev) {
                         if (self.checkModifiers.call($element, args, val, prev)) {
                             $element.addClass(args.class)
