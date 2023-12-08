@@ -5,6 +5,7 @@
     ], function(modules, namespace, model) {
         var pending = {};
         var templates = {};
+        var constructors = {};
         var controllers = {};
         return {
             scan: function($element, model) {
@@ -73,8 +74,8 @@
             },
 
             getController: function(path, $fragment) {
-                if (path && typeof($fragment) === 'undefined' && controllers[path]) {
-                    return controllers[path];
+                if (path && typeof($fragment) === 'undefined' && constructors[path]) {
+                    return constructors[path];
                 }
 
                 var controller = $fragment.attr('z--controller');
@@ -87,59 +88,51 @@
                         controller = namespace.controller(controller);
                     }
 
-                    if (typeof(controllers[path]) === 'undefined') {
+                    if (typeof(constructors[path]) === 'undefined') {
+                        constructors[path] = $.Deferred();
                         controllers[path] = $.Deferred();
                         dynCore.js(controller);
                     } else {
                         // controller already exists, return for model binding
                         var promise = $.Deferred();
-                        controllers[path].done(function(frag) {
-                            promise.resolve(function() {
-                                if (frag.reinit && frag.onInit) {
-                                    frag.onInit();
+                        controllers[path].done(function(frag, proto) {
+                            promise.resolve(function($fragment, parentModel) {
+                                var self = Object.create(proto);
+                                self.$fragment = $fragment;
+                                if (frag.sharedModel) {
+                                    self.model = frag.model;
+                                } else {
+                                    self.model = modules.lib.model(self.model, parentModel);
                                 }
-                                return frag;
+                                if (self.onInit) {
+                                    self.onInit();
+                                }
+                                return self;
                             });
                         });
                         return promise;
                     }
 
-                    return controllers[path];
+                    return constructors[path];
                 }
 
                 return $.when();
             },
 
-            controller: function(path, controller) {
+            controller: function(path, proto) {
+                constructors[path] = constructors[path] || $.Deferred();
                 controllers[path] = controllers[path] || $.Deferred();
-                controllers[path].resolve(function($fragment, model) {
-                    var self = Object.create(controller);
+                constructors[path].resolve(function($fragment, parentModel) {
+                    var self = Object.create(proto);
                     self.$fragment = $fragment;
-                    self.model = modules.lib.model(self.model, model);
+                    self.model = modules.lib.model(self.model, parentModel);
                     if (self.onInit) {
                         self.onInit();
                     }
-                    controllers[path] = $.when(self);
+                    controllers[path].resolve(self, proto);
                     return self;
-                });
+                }, proto);
                 return controllers[path];
-            },
-
-            instantiate: function(path) {
-                var promise = $.Deferred();
-
-                self.getController(path, $fragment).done(function(fn) {
-                    if (fn) {
-                        var controller = fn($fragment, model);
-                        model = controller.model;
-                    }
-                    $element.replaceWith($fragment);
-                    promise.resolve($fragment, model);
-                }).fail(function() {
-                    promise.reject();
-                });
-
-                return promise;
             }
         };
     });
