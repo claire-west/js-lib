@@ -414,7 +414,7 @@
                     if ($existing.length && typeof(val) !== 'undefined' && val !== null && typeof(val[i]) !== 'undefined' && val[i] !== null) {
                         $existing.show();
                     } else if ($existing.length) {
-                        $existing.hide();
+                        $existing.remove();
                     } else if (typeof(val) !== 'undefined' && val !== null && typeof(val[i]) !== 'undefined' && val[i] !== null) {
                         var $clone = args.$template.clone();
                         $clone.attr('z--index', i);
