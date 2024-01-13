@@ -29,6 +29,15 @@
             return binarySearch(ar, el, compare_fn) > -1;
         };
 
+        binarySearch.insert = function(ar, el, compare_fn) {
+            let i = binarySearch(ar, el, compare_fn);
+            if (i < 0) {
+                i = ~i;
+            }
+            ar.splice(i, 0, el);
+            return ar;
+        };
+
         return binarySearch;
     });
 })(window.dynCore);
