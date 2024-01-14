@@ -53,6 +53,15 @@
                 }
             },
 
+            preload: function(path, html) {
+                if (!pending[path]) {
+                    pending[path] = $.Deferred();
+                    pending[path].resolve(html);
+                }
+
+                return pending[path];
+            },
+
             get: function(path) {
                 var promise = $.Deferred();
 
