@@ -339,6 +339,18 @@
 
                     return promise;
                 },
+                initPreload: function(path) {
+                    var url = ns.js(path);
+                    if (preload[path]) {
+                        preload[path]();
+                        pending.push($.when().done(function() {
+                            console.info('Module ' + url + ' initialized from preload.');
+                            loadedModules.push(url);
+                        }));
+                        return true;
+                    }
+                    return false;
+                },
                 html: function(title, path, $container) {
                     path = path || ('/hub/html/' + title + '.html');
                     $container = $container || $('#app-' + title);
