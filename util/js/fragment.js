@@ -100,7 +100,9 @@
                     if (typeof(constructors[path]) === 'undefined') {
                         constructors[path] = $.Deferred();
                         controllers[path] = $.Deferred();
-                        dynCore.js(controller);
+                        if (!dynCore.initPreload(path)) {
+                            dynCore.js(controller)
+                        }
                     } else {
                         // controller already exists, return for model binding
                         var promise = $.Deferred();
